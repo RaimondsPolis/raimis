@@ -2,11 +2,547 @@
 <html>
     <!-- head raksta izskatu -->
 <head>
-
+    <head><style>.gm-err-container{height:100%;width:100%;display:table;background-color:#e8eaed;position:relative;left:0;top:0}.gm-err-content{border-radius:1px;padding-top:0;padding-left:10%;padding-right:10%;position:static;vertical-align:middle;display:table-cell}.gm-err-content a{color:#3c4043}.gm-err-icon{text-align:center}.gm-err-title{margin:5px;margin-bottom:20px;color:#3c4043;font-family:Roboto,Arial,sans-serif;text-align:center;font-size:24px}.gm-err-message{margin:5px;color:#3c4043;font-family:Roboto,Arial,sans-serif;text-align:center;font-size:12px}.gm-err-autocomplete{padding-left:20px;background-repeat:no-repeat;-webkit-background-size:15px 15px;background-size:15px 15px}sentinel{}
+    </style><style>.gm-style-moc{background-color:rgba(0,0,0,.45);pointer-events:none;text-align:center;-webkit-transition:opacity ease-in-out;-o-transition:opacity ease-in-out;transition:opacity ease-in-out}.gm-style-mot{color:white;font-family:Roboto,Arial,sans-serif;font-size:22px;margin:0;position:relative;top:50%;-o-transform:translateY(-50%);transform:translateY(-50%);-webkit-transform:translateY(-50%);-ms-transform:translateY(-50%)}sentinel{}
+    </style><style>.gm-style img{max-width: none;}.gm-style {font: 400 11px Roboto, Arial, sans-serif; text-decoration: none;}</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700&amp;subset=latin-ext" rel="stylesheet">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    
+    <title>Rīgas Angļu ģimnāzija - RAG</title>
+    <link rel="stylesheet" href="/cms/font-awesome/css/font-awesome.min.css" type="text/css">
+                <link rel="stylesheet" href="/front/css/flexslider.css" type="text/css">
+                <link rel="stylesheet" href="/front/css/style.css" type="text/css">
+                <link rel="stylesheet" href="/front/css/swiper.min.css" type="text/css">
+                <link rel="stylesheet" href="/front/css/magnific-popup.css" type="text/css">
+                <link rel="stylesheet" href="/front/css/ino.css" type="text/css">
+                <script type="text/javascript"> 
+    /* 
+     * Chrome token signing extension 
+     * 
+     * This library is free software; you can redistribute it and/or 
+     * modify it under the terms of the GNU Lesser General Public 
+     * License as published by the Free Software Foundation; either 
+     * version 2.1 of the License, or (at your option) any later version. 
+     * 
+     * This library is distributed in the hope that it will be useful, 
+     * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
+     * Lesser General Public License for more details. 
+     * 
+     * You should have received a copy of the GNU Lesser General Public 
+     * License along with this library; if not, write to the Free Software 
+     * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA 
+     */ 
+     
+    // Promises 
+    var _eid_promises = {}; 
+    // Turn the incoming message from extension 
+    // into pending Promise resolving 
+    window.addEventListener("message", function(event) { 
+        if(event.source !== window) return; 
+        if(event.data.src && (event.data.src === "eparaksts-background.js")) { 
+            console.log("Page received: "); 
+            console.log(event.data); 
+            // Get the promise 
+            if(event.data.nonce) { 
+                var p = _eid_promises[event.data.nonce]; 
+                // resolve 
+                if(p !== undefined) { 
+                    if(event.data.result === "ok") { 
+                        if(event.data.signature !== undefined) { 
+                            p.resolve({hex: event.data.signature}); 
+                        } else if(event.data.version !== undefined && event.data.extension !== undefined) { 
+                            p.resolve(event.data.version + "/js" + event.data.extension); 
+                        } else if(event.data.cert !== undefined) { 
+                            p.resolve({hex: event.data.cert}); 
+                        } else { 
+                            console.log("No idea how to handle message"); 
+                            console.log(event.data); 
+                        } 
+                    } else { 
+                        // reject 
+                        p.reject(new Error(event.data.result)); 
+                    } 
+                } else { 
+                    console.log("Undefined promise"); 
+                } 
+                delete _eid_promises[event.data.nonce]; 
+            } else { 
+                console.log("No nonce in event msg"); 
+            } 
+        } 
+    }, false); 
+     
+     
+    function eParakstsTokenSigning() { 
+        function nonce() { 
+            var val = ""; 
+            var hex = "abcdefghijklmnopqrstuvwxyz0123456789"; 
+            for(var i = 0; i < 16; i++) val += hex.charAt(Math.floor(Math.random() * hex.length)); 
+            return val; 
+        } 
+     
+        function messagePromise(msg) { 
+            return new Promise(function(resolve, reject) { 
+                // amend with necessary metadata 
+                msg["nonce"] = nonce(); 
+                msg["src"] = "eparaksts-page.js"; 
+                // send message 
+                window.postMessage(msg, "*"); 
+                // and store promise callbacks 
+                _eid_promises[msg.nonce] = { 
+                    resolve: resolve, 
+                    reject: reject 
+                }; 
+            }); 
+        } 
+        this.getCertificate = function(options) { 
+            var msg = {type: "CERT", lang: options.lang, operation: options.operation}; 
+            console.log("getCertificate()"); 
+            return messagePromise(msg); 
+        }; 
+        this.sign = function(cert, hash, options) { 
+            var msg = {type: "SIGN", cert: cert.hex, hash: hash.hex, hashtype: hash.type, lang: options.lang, operation: options.operation}; 
+            console.log("sign()"); 
+            return messagePromise(msg); 
+        }; 
+        this.getVersion = function() { 
+            console.log("getVersion()"); 
+            return messagePromise({ 
+                type: "VERSION" 
+            }); 
+        }; 
+    } 
+    </script><script type="text/javascript" charset="UTF-8" src="https://maps.googleapis.com/maps-api-v3/api/js/54/11/common.js"></script><script type="text/javascript" charset="UTF-8" src="https://maps.googleapis.com/maps-api-v3/api/js/54/11/util.js"></script><script type="text/javascript" charset="UTF-8" src="https://maps.googleapis.com/maps-api-v3/api/js/54/11/map.js"></script><script type="text/javascript" charset="UTF-8" src="https://maps.googleapis.com/maps-api-v3/api/js/54/11/marker.js"></script><script type="text/javascript" charset="UTF-8" src="https://maps.googleapis.com/maps-api-v3/api/js/54/11/onion.js"></script><script type="text/javascript" charset="UTF-8" src="https://maps.googleapis.com/maps-api-v3/api/js/54/11/infowindow.js"></script><script type="text/javascript" charset="UTF-8" src="https://maps.googleapis.com/maps-api-v3/api/js/54/11/controls.js"></script></head>
 </head>
 
 <body>
-    <h1 style="font-size:240px;">heading 1</h1>
+    <body class="ino-main">
+        <section class="header">
+        <div class="headerin">
+            <a href="/" id="logo"><img src="/front/img//logo.png"></a>
+            <div class="headertext"><br>Rīgas Angļu ģimnāzija</div>
+            <div class="language">
+                                <a href="/"><img src="/front/img//lv.png"></a>
+                                            <a target="_blank" href="/f/information.pdf"><img src="/front/img//en.png"></a>
+                                </div>
+            <a href="/" id="logomob"><img src="/front/img//logo.png"> Rīgas Angļu ģimnāzija</a>
+            <div class="menu">
+                <a href="/jaunumi/">Par skolu</a>
+                
+                                            <a href="/dokumenti-ki/">Papildu izglītība</a>
+                        
+                        <a href="/interesu-izglitiba/">Interešu izglītība </a>
+                <a href="/projekti/">Projekti</a>
+                <a href="/kontakti/">Kontakti</a>
+            </div>
+            <div class="mobmen"><img src="/front/img//menu.png"></div>
+            <div class="mobmenu">
+                <a href="/jaunumi/">Par skolu</a>
+                <a href="/uznemsana/">Uzņemšana</a>
+                <a href="/interesu-izglitiba/">Interešu izglītība </a>
+                <a href="/kontakti/">Kontakti</a>
+            </div>
+        </div>
+    </section><section>
+        <div id="slideshow">
+            <div class="flexslider">
+                 <ul class="slides">
+                            <li class="flex-active-slide" style="width: 100%; float: left; margin-right: -100%; position: relative; opacity: 1; display: block; z-index: 2;">
+                        <div class="sliids" style="background:#000 url(/file/slides/10-lg/kop.jpg); background-size:cover; background-position:top center;">
+                            <div class="wrap">
+                                <h1></h1>
+                                <h2></h2>
+                                                            
+                            </div>
+                        </div>
+                    </li>
+                         </ul>
+            <ol class="flex-control-nav flex-control-paging"></ol><ul class="flex-direction-nav"><li class="flex-nav-prev"><a class="flex-prev flex-disabled" href="#" tabindex="-1">Previous</a></li><li class="flex-nav-next"><a class="flex-next flex-disabled" href="#" tabindex="-1">Next</a></li></ul></div>
+        </div>
+    </section>
+    <section class="submenu">
+        <div class="wrap">
+                <a href="/stundu-laiki/"><img src="/front/img/gramatas.svg"> <p>Mācības</p></a>
+                <a href="/skolas-sporta-pasakumi/"><img src="/front/img/izmainas.svg"><p>RAG sports</p></a>	
+            <a href="/pasakumi/"><img src="/front/img/pasakumi.svg"> <p>Pasākumi</p></a>
+            <a href="/biblioteka/"><img src="/front/img/biblioteka.svg"> <p>Bibliotēka</p></a>	
+            <a href="/edinasana/"><img src="/front/img/ednica.svg"> <p>Ēdināšana</p></a>	
+            <a class="maut" href="#"><img src="/front/img/aut.png"> <p>Autorizeties</p></a>			
+        </div>
+    </section>
+    
+    <section class="jaunumi">
+        <div class="wrap">
+            <h2><img src="/front/img/jaunumi.png">Ziņas</h2>
+                    <!-- Slider main container -->
+    <div class="swiper-container swiper-default swiper-container-horizontal">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper" style="transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;">
+            <!-- Slides -->
+                         <div class="swiper-slide swiper-slide-active" style="width: 58.25px;">
+                    <a href="/musu-skolniece-uznemta-programma-future-heroes/">
+                    <div class="jaunums">
+                        <h3 style="background:#000000">Konkursi</h3>
+                        <img src="/file/glory/158-sm/futureheroes2023.jpg" title="futureheroes_2023">
+                        <p>Mūsu skolniece uzņemta programmā Future Heroes</p>
+                    </div>
+                    </a>
+                </div> 			 <div class="swiper-slide swiper-slide-next" style="width: 58.25px;">
+                    <a href="/projekti/ebru-maksla-jeb-gleznosana-uz-udens/">
+                    <div class="jaunums">
+                        <h3 style="background:#098e8e">Projekti</h3>
+                        <img src="/file/projects/70-sm/skolassomaprojekts.jpg" title="skolassoma_projekts">
+                        <p>Ebru māksla jeb gleznošana uz ūdens</p>
+                    </div>
+                    </a>
+                </div> 			 <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/jaunumi/olimpiades1sem/">
+                    <div class="jaunums">
+                        <h3 style="background:#ff001f">Ziņas</h3>
+                        <img src="/file/news/184-sm/izciliba.jfif" title="izciliba">
+                        <p>Mācību olimpiādes 1. semestrī</p>
+                    </div>
+                    </a>
+                </div> 			 <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/jaunumi/izmainas-izglitojamo-edinasanas-pakalpojuma-lidzfinansejuma-pieskirsanas-nosacijumos/">
+                    <div class="jaunums">
+                        <h3 style="background:#ff001f">Ziņas</h3>
+                        <img src="/file/news/186-sm/edinasanaizmainas1.jpg" title="edinasana_izmainas1">
+                        <p>Izmaiņas izglītojamo ēdināšanas pakalpojuma līdzfinansējuma piešķiršanas nosacījumos</p>
+                    </div>
+                    </a>
+                </div> 			 <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/jaunumi/reitings/">
+                    <div class="jaunums">
+                        <h3 style="background:#ff001f">Ziņas</h3>
+                        <img src="/file/news/181-sm/microsoftteams-image2.png" title="MicrosoftTeams-image2">
+                        <p>Ata Kronvalda fonda PALDIES skolēniem un skolotājiem!</p>
+                    </div>
+                    </a>
+                </div> 	</div>
+        <!-- If we need pagination -->
+        <div class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets"><span class="swiper-pagination-bullet swiper-pagination-bullet-active"></span><span class="swiper-pagination-bullet"></span></div>
+        <!-- If we need scrollbar -->
+        <div class="swiper-scrollbar"></div>
+    </div>
+    
+    </div></section>
+    <section class="parskolu">
+        <div class="wrap">
+            <h2><img src="/front/img/parmums.png">Par skolu</h2>
+            <p></p><p>Rīgas Angļu ģimnāzija (skola, kurā padziļināti un integrēti apgūst angļu valodu) ir RD IKSD pakļautības iestāde. Mūsu absolventi ir konkurētspējīgas un atbildīgas personības – pārliecināti par sevi, vispusīgi izglītoti un gatavi studijām, spēj realizēt savu potenciālu (zināšanas, prasmes, talantus un resursus), prot strādāt komandā un sasniegt kopīgus mērķus.</p>
+    <p>Mūsdienīgs, sadarbībā balstīts mācību process un vide, kurā skolēniem tiek izkoptas augsta līmeņa mācīšanās prasmes.</p>
+    <p>Mūsdienīgs mācību process: skolēncentrētas mācības, kas veicina 21.gadsimta kompetenču pilnveidi (sadarbību, kritisko domāšanu, prasmīgu komunikāciju un radošumu) un pieaugošu spēju patstāvīgi mācīties.Sadarbībā balstīts mācību process: skolēnu, viņu vecāku un pedagogu savstarpēja daudzlīmeņu sadarbība, kuras ietvaros tiek saskatīts un maksimāli attīstīts katra skolēna potenciāls, tiek veicināta karjeras izglītība un izkoptas personības īpašības, kas nodrošina skolēna konkurētspēju nākotnē. Augsta līmeņa mācīšanās prasmes: kritiskā un algoritmiskā domāšana, multimodāla komunikācija, sadarbība ( tai skaitā un it īpaši e-vidē) un radošums, mūsdienīgas informācijas strukturēšanas tehnikas, debates, diskusijas, racionāla atvērto mācību resursu (OER-Open Educational Resources) izmantošana, daudzveidīgi mācīšanās paņēmieni.</p>
+    <p>Ar piekļūstamības paziņojumu Jūs variet iepazīties <a href="https://www.rag.lv/f/Pieklustamiba.doc" target="_blank">šeit</a>, bet protokols ir <a href="https://www.rag.lv/f/izvertesanas-protokols.docx" target="_blank">šeit</a>.</p>
+    <p><a href="https://www.rag.lv/f/Pieklustamiba_1.htm" target="_blank">piekļūstamība</a></p><p></p>
+        </div>
+    </section>
+    
+    
+    <section class="autorizeties">
+        <div class="wrap">
+            <div class="wrap">
+                <a href="https://www.e-klase.lv" target="_blank"><img src="/front/img/eklase.png"> <p>Elektroniska<br>klase</p></a>
+                <a href="https://anglugimnazija.sharepoint.com"><img src="/front/img/edv.svg"><p>Elektroniska<br>darba vide</p></a>	
+                <a href="https://www.facebook.com/RagSkolenuPadome/" target="_blank"><img src="/front/img/fb.svg"> <p>Skolas<br>facebook</p></a>	
+                
+                <a href="https://twitter.com/RAG_vk" class="fa-cell" target="_blank">
+                    <div class="icon-wrapper-main"><i class="fa fa-twitter icon-urls-main"></i></div>
+                    <p>RAG</p>
+                </a>
+                
+            </div>		
+        </div>
+    </section>
+    
+    
+    
+    <section class="galerijas">
+        <div class="wrap">
+            <h2><img src="/front/img/gal.png">Galerija</h2>
+            
+                            <!-- Slider main container -->
+    <div class="swiper-container swiper-default swiper-container-horizontal">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper" style="transform: translate3d(-932px, 0px, 0px); transition-duration: 0ms;">
+            <!-- Slides -->
+                         <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/skoleni-darbojas-ebru-maksla-jeb-gleznosana-uz-udens/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/57/404th/whatsapp-image-2023-10-23-at-19.jpg">
+                        <p>Skolēni darbojas Ebru māksla jeb gleznošana uz ūdens</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/karjeras-nedela-2023/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/56/396th/387538043-848189783438350-5014348585042671425-n.jpg">
+                        <p>Karjeras Nedēļa 2023</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/erasmusdienas2023/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/55/382th/img-7080-1.jpg">
+                        <p>ErasmusDienas2023</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/skoleni-piedalas-saha-olimpiade/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/54/373th/20230506-160306.jpg">
+                        <p>Skolēni piedalās šaha olimpiādē</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/tehnologiju-un-jaunrades-forums-2023/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/53/346th/whatsapp-image-2023-06-01-at-12.jpg">
+                        <p>Tehnoloģiju un Jaunrades forums 2023</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/hokeja-izlases-laureati-ari-rag-absolventi/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/52/344th/whatsapp-image-2023-05-31-at-14.jpg">
+                        <p>Hokeja izlases laureāti arī RAĢ absolventi</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/debasu-apmainu-pieredze/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/50/331th/20230419-131829.jpg">
+                        <p>Debašu apmaiņu pieredze</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/muzikas-skolu-audzeknu-koncerts/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/51/338th/whatsapp-image-2023-05-09-at-11.jpg">
+                        <p>Mūzikas skolu audzēkņu koncerts</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/clil-konference-rag-4janvari/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/47/304th/292th.jpg">
+                        <p>CLIL konference RAĢ, 4.janvārī</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/citadaka-macibu-stunda/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/34/155th/whatsapp-image-2022-10-03-at-1-08-49-pm.jpg">
+                        <p>Citādāka mācību stunda </p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/skolas-soma-pasakums-vidusskoleniem-velesanas/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/49/326th/whatsapp-image-2023-02-27-at-10.jpg">
+                        <p>Skolas Soma pasākums vidusskolēniem </p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/rag-karjeras-diena-2023/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/48/317th/whatsapp-image-2023-01-30-at-07.jpg">
+                        <p>RAĢ Karjeras Diena 2023</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/rosiba-petniecibas-centra-galerija/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/36/181th/33.jpg">
+                        <p>Rosība pētniecības centrā</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/brivlaiks-iespeja-sadarboties-un-dalities-pieredze/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/37/185th/img-20221103-wa0001.jpg">
+                        <p>Brīvlaiks – iespēja sadarboties un dalīties pieredzē</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/kursa-socialas-zinibas-ii-aktivitates-rudens-macibu-semestri/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/38/190th/foto-satversmes-tiesa.jpg">
+                        <p>Kursa "Sociālās zinības II" aktivitātes rudens mācību semestrī.</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide swiper-slide-prev" style="width: 58.25px;">
+                    <a href="/galerijas/sakumskoleni-ciemos-pie-dzimbas/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/39/197th/whatsapp-image-2022-11-10-at-12-22-17-pm.jpg">
+                        <p>Sākumskolēni ciemos pie Džimbas</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide swiper-slide-active" style="width: 58.25px;">
+                    <a href="/galerijas/papardes-zieds-nodarbibas-7-un-9klasu-skoleniem/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/40/201th/whatsapp-image-2022-11-11-at-11-12-35-am-1-.jpg">
+                        <p>Papardes zieds nodarbības 7. un 9.klašu skolēniem</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide swiper-slide-next" style="width: 58.25px;">
+                    <a href="/galerijas/lacplesu-diena-sakumskola/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/41/205th/whatsapp-image-2022-11-16-at-12.jpg">
+                        <p>Lāčplēšu diena sākumskolā</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/18novembra-svetku-koncerts/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/42/214th/dsc-9522.jpg">
+                        <p>18.novembra svētku koncerts</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/svetkus-gaidot-zvaigznes-rota-durvis/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/43/232th/whatsapp-image-2022-12-20-at-13.jpg">
+                        <p>Svētkus gaidot - zvaigznes rotā durvis </p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/svetkus-gaidot-zvaigznes-rota-durvis-2/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/44/252th/whatsapp-image-2022-12-20-at-13.jpg">
+                        <p>Svētkus gaidot - zvaigznes rotā durvis 2</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/svetkus-gaidot-zvaigznes-rota-durvis-3/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/45/272th/whatsapp-image-2022-12-20-at-13.jpg">
+                        <p>Svētkus gaidot - zvaigznes rotā durvis 3</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/5klasu-petniecibas-darbu-prezentesana/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/46/279th/img-20221222-121300.jpg">
+                        <p>5.klašu pētniecības darbu prezentēšana</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/kirbju-ballite-sakumskola/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/35/161th/10.jpg">
+                        <p>Ķirbju ballīte sākumskolā</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/dzejas-dienu-aktivitates-sakumskoleniem/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/33/145th/whatsapp-image-2022-10-03-at-12-42-34-pm.jpg">
+                        <p>Dzejas dienu aktivitātes sākumskolēniem</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/erasmus-programmas-projekts-sadarbiba-inovacijam-un-pieredzes-apmainai-m5-rumanija/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/25/87th/rum-1.jpg">
+                        <p>ERASMUS+ programmas projekts  „Sadarbība inovācijām un pieredzes apmaiņai” (M5-Rumānijā)</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/erasmus-programmas-projekts-sadarbiba-inovacijam-un-pieredzes-apmainai-m2/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/24/81th/lv-1.jpg">
+                        <p>ERASMUS+ programmas projekts  „Sadarbība inovācijām un pieredzes apmaiņai” (M2-Latvijā)</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/erasmus-programmas-projekts-sadarbiba-inovacijam-un-pieredzes-apmainai-m4/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/23/78th/griekija-2.jpg">
+                        <p>ERASMUS+ programmas projekts  „Sadarbība inovācijām un pieredzes apmaiņai” (M4-Grieķijā)</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/erasmus-programmas-projekts-sadarbiba-inovacijam-un-pieredzes-apmainai-m3/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/21/65th/cpl-spanija.jpg">
+                        <p>ERASMUS+ programmas projekts  „Sadarbība inovācijām un pieredzes apmaiņai” (M3-Spānijā)</p>
+                    </div>
+                    </a>
+                </div>
+                     <div class="swiper-slide" style="width: 58.25px;">
+                    <a href="/galerijas/erasmus-programmas-projekts-sadarbiba-inovacijam-un-pieredzes-apmainai-m1/">
+                    <div class="galerija">
+                        <img src="/gallery/gallery-pic/20/58th/cpl-1.jpg">
+                        <p>ERASMUS+ programmas projekts  „Sadarbība inovācijām un pieredzes apmaiņai” (M1-Turcijā)</p>
+                    </div>
+                    </a>
+                </div>
+            </div>
+        <!-- If we need pagination -->
+        <div class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets"><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet swiper-pagination-bullet-active"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span><span class="swiper-pagination-bullet"></span></div>
+        
+    
+        
+        <!-- If we need scrollbar -->
+        <div class="swiper-scrollbar"></div>
+    </div>
+            <div class="clear"></div>
+            <a href="/galerijas/" class="readon">Visas galerijas</a>
+            <div class="clear"></div>
+        </div>
+    </section>
+    <section class="footer">
+                <div class="wrap z999">
+                <div class="kontakti">
+                    <img src="/front/img/skola.jpg">
+                    <p>Zvārdes iela 1, Rīga, LV 1004<br> tel.: +371&nbsp;67612425<br> rag@riga.lv</p>			</div>
+            </div>	
+        <div id="map" class="map" data-lat="56.925227" data-lng=" 24.072779" data-gps="[{&quot;gid&quot;:&quot;2&quot;,&quot;title&quot;:&quot;R\u012bgas Ang\u013cu \u0123imn\u0101zija&quot;,&quot;adr&quot;:&quot;Zv\u0101rdes iela 1, Zemgales priek\u0161pils\u0113ta, R\u012bga, LV-1004&quot;,&quot;gps&quot;:&quot;56.925227, 24.072779&quot;}]" style="position: relative; overflow: hidden;"><div style="height: 100%; width: 100%; position: absolute; top: 0px; left: 0px; background-color: rgb(229, 227, 223);"><div class="gm-err-container"><div class="gm-err-content"><div class="gm-err-icon"><img src="https://maps.gstatic.com/mapfiles/api-3/images/icon_error.png" alt="" draggable="false" style="user-select: none;"></div><div class="gm-err-title">Oops! Something went wrong.</div><div class="gm-err-message">This page didn't load Google Maps correctly. See the JavaScript console for technical details.</div></div></div></div></div>
+            <div class="copyright">
+            <div class="wrap">
+                Visas tiesības aizsargātas Rīgas Angļu Ģimnāzija 2017.			
+            </div>
+        </div>
+    </section><script type="text/javascript" src="/front/js/jquery.min.js"></script>
+                <script type="text/javascript" src="/front/js/jquery.flexslider.js"></script>
+                <script type="text/javascript" src="/front/js/swiper.jquery.min.js"></script>
+                <script type="text/javascript" src="/front/js/jquery.magnific-popup.min.js"></script>
+                <script type="text/javascript" src="/front/js/ino.js"></script>
+                <script>console.group("Mvc logs");console.log('%c/home/cp53844/rag.lv/front/pge/.php does not exit!', 'red');console.groupEnd();</script>	
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_KpNBKVquLoAnNDOJ6IHWaVip_zenw70&amp;callback=initialize"></script><div style="position: absolute; left: 0px; top: -2px; height: 1px; overflow: hidden; visibility: hidden; width: 1px;"><span style="position: absolute; font-size: 300px; width: auto; height: auto; margin: 0px; padding: 0px; font-family: Roboto, Arial, sans-serif;">BESbswy</span></div></body>
 </body>
 
 

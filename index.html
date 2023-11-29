@@ -11,7 +11,8 @@
         background-repeat: no-repeat;
     }
     .container{
-        background-color: rgb(27, 185, 185);
+      background-color: rgb(110, 133, 96);
+    
     }
     .button{
         border: none;
@@ -25,7 +26,30 @@
         cursor: pointer;
     }
     .button2 {background-color: #3a6d7e;} /* Blue */
+
+    #radamaissaturs{
+        display: none;
+
+    }
+    #pogaradit{
+        display: block;
+    }
+    #pogaradit1{
+        display: none;
+    }
  </style>
+ <script>
+    function raditSaturu(){
+        document.getElementById("radamaissaturs").style.display ="block";
+        document.getElementById("pogaradit").style.display="none";
+        document.getElementById("pogaradit1").style.display="block";
+    }
+    function pasleptSaturu(){
+        document.getElementById("radamaissaturs").style.display="none";
+        document.getElementById("pogaradit").style.display="block";
+        document.getElementById("pogaradit1").style.display="none";
+    }
+ </script>
 </head>
 
 <body style="background-color:#c2cfdb">
@@ -118,25 +142,19 @@
              </table>
         </div>
     </div>
-     <div class="container text-center">
+    <button id="pogaradit" class="button button2"onclick="raditSaturu()">Par mani</button>
+ 
+     <div  id="radamaissaturs" class="container text-center">
         <div class="row">
             <div class="col-3">
-                <img src="https://w7.pngwing.com/pngs/653/101/png-transparent-united-states-drum-stick-hickory-drums-wood-baquetas-sound-vic-firth-company-vic-firth-thumbnail.png">
+                <img  src="https://w7.pngwing.com/pngs/653/101/png-transparent-united-states-drum-stick-hickory-drums-wood-baquetas-sound-vic-firth-company-vic-firth-thumbnail.png">
                  </div>
             <div class="col-9">
                 <h4>Es esmu cilvēks kas spēlē bungas un es programmēju šo lapu</h4>
             </div>
         </div>
-        <div class="row" >
-           <div class="col-4">
-                trololololol
-           </div>
-           <div class="col-8">
-            you mom gay 
-           </div>
-        </div>
-        
-        </div>
+    </div>
+    <button id="pogaradit1" class="button button2" onclick="pasleptSaturu()">Paslēpt</button>
     </body>
 
 
